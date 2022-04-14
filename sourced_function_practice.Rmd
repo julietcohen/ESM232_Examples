@@ -1,0 +1,62 @@
+---
+title: "compute_diversity_practice"
+author: "Juliet"
+date: "4/12/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(tidyverse)
+library(palmerpenguins)
+```
+
+Make data to feed into the compute_diversity.R function: compute_diversity()
+
+```{r}
+source(here("R/compute_diversity.R"))
+flower_types = c("roses", "poppies", "liliacs", "daisy", "violet")
+garden <- sample(flower_types, size = 10, replace = TRUE)
+compute_diversity(garden)
+
+```
+
+Play with the solarpv.R function
+
+```{r}
+source(here("R/solarpv.R"))
+
+#' @param area area of panel (m2)
+#' @param eff solar panel efficiency (0-1) default 0.8
+#' @param PR performance ratio (system related) (0-1) default is 0.75
+#' @param solar  array with the following columns day month year Kdown_direct Kdown_diffuse (kJ/m2/day)
+#' @param eunits energy output: J results in kJ/m2/year or W then assume KWh, default = J
+#' @param ethresh threshold radiation (kJ/m2) below which efficiency fall to 0
+#' @param g TRUE/FALSE  graph results default=TRUE
+#' @param clr colour of grph default "blue"
+#' @param etype "both" uses both direct and diffuse, "direct' direct only, "diffuse" diffuse only default="both"
+#' @author Naomi
+#' @return annual (power for each year), avg (average power) (see eunits for units)
+
+#solarpv(area = 5, solar = )
+
+```
+
+Practice using purrr package, like the map() function
+
+```{r}
+head(map(penguins$bill_length_mm, ~ .x + 2))
+
+penguins_array <- array(c(penguins$bill_length_mm, penguins$bill_depth_mm), dim = c(5, 5))
+
+apply(X = penguins_array, MARGIN = 1, FUN = mean)
+
+```
+
+
+
+
+
+
+
