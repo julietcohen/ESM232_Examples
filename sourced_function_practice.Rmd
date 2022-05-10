@@ -25,7 +25,6 @@ compute_diversity(garden)
 Play with the solarpv.R function
 
 ```{r}
-source(here("R/solarpv.R"))
 
 #' @param area area of panel (m2)
 #' @param eff solar panel efficiency (0-1) default 0.8
@@ -39,8 +38,24 @@ source(here("R/solarpv.R"))
 #' @author Naomi
 #' @return annual (power for each year), avg (average power) (see eunits for units)
 
-#solarpv(area = 5, solar = )
+source(here("R/solarpv.R"))
 
+day <- c(01, 05, 09, 10, 17)
+month <- c(01, 02, 03, 04, 05)
+year <- c(2020, 2021, 2022, 2023, 2024)
+Kdown_direct <- c(40, 50, 60, 70, 80)
+Kdown_diffuse <- c(20, 30, 40, 50, 60)
+
+solar_df <- data.frame(day = day, 
+                       month = month,
+                       year = year,
+                       Kdown_direct = Kdown_direct,
+                       Kdown_diffuse = Kdown_diffuse)
+
+solar_default <- solarpv(area = 5, solar = solar_df)
+
+
+#solar_array <- array(c(day, month, year, Kdown_direct, Kdown_diffuse), dim = c(5,5))
 ```
 
 Practice using purrr package, like the map() function

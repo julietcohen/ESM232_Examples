@@ -22,14 +22,16 @@ see example below..lets add a carrying capacity
 
 ```{r}
 
-
+library(deSolve)
+library(tidyverse)
 
 source("../R/dexppop_play.R")
 
-dexppop
+#dexppop
 
 # create parameter list
-initalrabbits=2
+initialrabbits=2
+years=seq(1, 100, by=2)
 newparms = list(r=0.03, carry_capacity=300)
 
 #apply solver
@@ -46,7 +48,7 @@ ggplot(as.data.frame(results), aes(year,P))+geom_point()+labs(y="Population", "y
 # try again with different parameters
 alternativeparms = list(r=0.04, carry_capacity=500)
 results2=ode(initialrabbits, years, dexppop_play,alternativeparms)
-
+results2
 
 # look at results
 head(results2)
@@ -58,10 +60,12 @@ ggplot(as.data.frame(results2), aes(year,P_parm2))+geom_point()+labs(y="Populati
 # compare by combining into a single data frame
 both = inner_join(as.data.frame(results), as.data.frame(results2))
 
-both_p = both %>% gather(key="model", value="P", -year)
+both_p = both %>% gather(key="model", value="P", -year) # same as pivot longer, just old function
 ggplot(both_p, aes(year,P, col=model))+geom_point()+labs(y="Population", "years")
 
 # try playing on your own - modify the function in some way
+# this function integrates the input diff eqn for each point in time or space
+# this is best utilized for complex diff eqns with 1 changing param (time or space) but it is always preferred to integrate by hand because that way is more analytically correct
 ```
 
 # Difference Equations 
@@ -83,7 +87,7 @@ source("../R/discrete_logistic_pop.R")
 # how many rabbits after 50 years given a growth of 0.1
 # starting with 1 rabbit - but a carrying capcity of 500
 
-discrete_logistic_pop
+#discrete_logistic_pop
 
 discrete_logistic_pop(P0=1, r=0.05, K=200, T=50)
 
@@ -112,6 +116,8 @@ numerical integration using in discrete steps (discrete_logistic_pop.R)
 source("../R/exppop.R")
 
 exppop(P0=P0, r=r, K=K, T=T)
+# returns a single value
+
 analytic_result = exppop(P0=P0, r=r, K=K, T=T)
 
 analytic_result
@@ -121,8 +127,11 @@ discrete_result
 # look at trajectories
 
 growth_result = data.frame(time=seq(from=1,to=100))
+# df of times to plug into the function 
 
-growth_result$Panalytic = growth_result$time %>% map_dbl(~exppop( P0=1,r=0.05, K=200,T=.x ))
+# create a new col called Panalytic
+growth_result$Panalytic = growth_result$time %>% 
+  map_dbl(~exppop( P0=1,r=0.05, K=200,T=.x ))
 
 growth_result$Pdiscrete = growth_result$time %>% map_dbl(~discrete_logistic_pop( P0=1,r=0.05, K=200,T=.x ))
 
